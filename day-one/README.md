@@ -35,7 +35,11 @@ La commande `kubectl get pods -n default` renvoie une erreur car je n'ai pas les
 
 ### Quelles sont les propriétés principales que l'on retrouve dans le fichier de configuration du pod ?
 
+Les propriétés principales sont les suivants: apiVersion, kind, metadata et spec.
+
 ```yaml
+# log du fichier de configuration
+
 apiVersion: v1
 kind: Pod
 metadata:
