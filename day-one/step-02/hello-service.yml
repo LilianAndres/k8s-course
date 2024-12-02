@@ -7,5 +7,5 @@ spec:
     app: hello
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 3000
+      port: 80 # entry service port
+      targetPort: 3000 # entry pod port
