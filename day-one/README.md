@@ -83,7 +83,7 @@ metadata:
   labels:
     app: unicorn-front
 spec:
-  template:
+  template: # template des pods du ReplicaSet
     metadata:
       name: unicorn-front-pod
       labels:
@@ -92,7 +92,7 @@ spec:
       containers:
         - name: unicorn-front
           image: registry.takima.io/school/proxy/nginx
-  replicas: 3
+  replicas: 3 # 3 Pods
   selector:
     matchLabels:
       app: unicorn-front
@@ -101,10 +101,11 @@ spec:
 ### Que remarquez-vous dans la description des properties spec: template ? À quoi sert le selector: matchLabels ?
 
 Dans le template, la partie metadata définit les métadonnées de chaque Pod du ReplicaSet.
-Il est inhabituel de spécifier metadata.name dans le template d’un ReplicaSet.
-Ce champ est souvent omis car Kubernetes génère automatiquement un nom unique pour chaque Pod créé.
-La présence de ce champ est généralement redondante.
+
+Il est inhabituel de spécifier metadata.name dans le template d’un ReplicaSet. Ce champ est souvent omis car Kubernetes génère automatiquement un nom unique pour chaque Pod créé.
+
 Les labels app: unicorn-front sont appliqués aux Pods créés par ce ReplicaSet, ce qui est essentiel pour leur identification et leur gestion.
+
 Le selector: matchLabels établit un lien logique entre le ReplicaSet et les Pods qu'il doit gérer, garantissant que Kubernetes maintienne le bon nombre de réplicas pour l'application unicorn-front.
 
 ### Que se passe-t-il lors une deuxième création identique en impératif ?
@@ -113,11 +114,13 @@ Error from server (AlreadyExists): pods "mynginx" already exists
 
 ### Que se passe-t-il lors de cette deuxième création en déclaratif ?
 
+```
 Warning: resource pods/mynginx is missing the kubectl.kubernetes.io/last-applied-configuration annotation which
 is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl
 create --save-config or kubectl apply. The missing annotation will be patched automatically.
 
 pod/mynginx configured
+```
 
 ### Combien y a-t-il de pods déployés dans votre namespace ?
 
@@ -133,10 +136,11 @@ unicorn-front-replicaset-x7vcl 1/1 Running 0 2s
 pod "unicorn-front-replicaset-9rdjf" deleted
 ```
 
-Pourtant,
+Pourtant, les trois Pods précédents sont toujours up.
 
 ```
 kubectl get pods -n lilian-andres
+
 NAME READY STATUS RESTARTS AGE
 unicorn-front-replicaset-2z6zl 1/1 Running 0 5s
 unicorn-front-replicaset-h9gqr 1/1 Running 0 82s
@@ -175,10 +179,10 @@ spec:
 
 ### Quels sont les changements avec le ReplicaSet ?
 
-- kind: Deployment : Utilise un Deployment qui gère automatiquement les mises à jour et crée un ReplicaSet en arrière-plan.
-- image: registry.takima.io/school/proxy/nginx:1.7.9 : Spécifie une version particulière de l'image nginx (tag 1.7.9), ce qui permet un meilleur contrôle des versions déployées.
-- Aucun champ metadata.name dans le template car Kubernetes génère automatiquement les noms des Pods.
-- Expose le port 80 dans le conteneur.
+- `kind: Deployment` : Utilise un Deployment qui gère automatiquement les mises à jour et crée un ReplicaSet en arrière-plan.
+- `image: registry.takima.io/school/proxy/nginx:1.7.9` : Spécifie une version particulière de l'image nginx (tag 1.7.9), ce qui permet un meilleur contrôle des versions déployées.
+- Aucun champ `metadata.name` dans le template car Kubernetes génère automatiquement les noms des Pods.
+- Expose le port `80` dans le conteneur.
 
 ### Combien y a-t'il de ReplicaSet ? De Pods ?
 
