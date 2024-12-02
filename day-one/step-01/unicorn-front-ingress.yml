@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unicorn-front-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: unicorn.lilian-andres.cpe.takima.school
+      http:
+        paths:
+          - backend:
+              service:
+                name: unicorn-front-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

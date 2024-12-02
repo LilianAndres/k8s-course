@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: recreate-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: recreate.lilian.andres.cpe.takima.school
+      http:
+        paths:
+          - backend:
+              service:
+                name: recreate-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

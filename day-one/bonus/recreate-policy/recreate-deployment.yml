@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recreate-deployment
+  labels:
+    app: recreate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: recreate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: recreate
+    spec:
+      containers:
+        - name: recreate
+          image: registry.takima.io/school/proxy/nginx:1.7.9
+          ports:
+            - containerPort: 80
