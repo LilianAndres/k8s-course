@@ -117,21 +117,27 @@ pod/mynginx configured
 
 ### Combien y a-t-il de pods déployés dans votre namespace ?
 
+```
 unicorn-front-replicaset-9rdjf 1/1 Running 0 2s
 unicorn-front-replicaset-h9gqr 1/1 Running 0 2s
 unicorn-front-replicaset-x7vcl 1/1 Running 0 2s
+```
 
 ### Que se passe-t-il lors de la suppression d'un Pod du ReplicaSet ?
 
+```
 pod "unicorn-front-replicaset-9rdjf" deleted
+```
 
 Pourtant,
 
+```
 kubectl get pods -n lilian-andres
 NAME READY STATUS RESTARTS AGE
 unicorn-front-replicaset-2z6zl 1/1 Running 0 5s
 unicorn-front-replicaset-h9gqr 1/1 Running 0 82s
 unicorn-front-replicaset-x7vcl 1/1 Running 0 82s
+```
 
 ### Que se passe-t-il lors de la suppression du ReplicaSet ?
 
