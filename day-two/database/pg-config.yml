@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: pg-config
 data:
-  postgres_db: cdb-db
+  postgres_db: cdb
   db_path: "/var/lib/postgresql/data/pgdata"

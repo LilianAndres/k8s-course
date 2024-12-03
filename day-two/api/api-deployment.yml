@@ -49,12 +49,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: pg-credentials
-                  key: postgres_user
+                  name: postgres.formation-cdb.credentials.postgresql.acid.zalan.do
+                  key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: pg-credentials
-                  key: postgres_password
+                  name: postgres.formation-cdb.credentials.postgresql.acid.zalan.do
+                  key: password
       imagePullSecrets:
         - name: takima-school-registry

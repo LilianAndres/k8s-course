@@ -201,3 +201,9 @@ pg-data-statefulset-pg-statefulset-2   Bound    pvc-51ee7b49-bd02-4ce6-9a3c-9a49
 Il y a également 3 PV dont le nom s'apparente à : lilian-andres/pg-data-statefulset-pg-statefulset-0.
 
 ### Bonus 3: Operator Postgres
+
+```
+kubectl create job --from=cronjob/logical-backup-formation-cdb manual-backup
+```
+
+Le backup a été validé en classe.

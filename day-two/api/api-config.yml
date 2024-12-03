@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: api-config
 data:
-  db_endpoint: pg-service.lilian-andres:5432
+  db_endpoint: formation-cdb.lilian-andres:5432
