@@ -4,3 +4,4 @@ metadata:
   name: pg-config
 data:
   postgres_db: cdb-db
+  db_path: "/var/lib/postgresql/data/pgdata"

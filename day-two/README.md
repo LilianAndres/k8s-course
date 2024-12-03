@@ -130,3 +130,74 @@ de la base de données, les modifications apportées à la base sont perdues.
 
 Il est nécessaire de rollout afin de forcer la re-création d'un Pod pour la base de données afin qu'il puisse s'alimenter en données.
 Le redémarrage simple du Pod n'est pas utile puisque les données ne sont toujours pas sauvegardées et ne seront donc pas restaurées.
+
+## Step 6: La persistance dans Kubernetes
+
+### D’après le tableau, quel est le type d’accès implémenté par notre Storage Class EBS ? Pourquoi cela convient parfaitement pour la persistance de la base de données Postgres ?
+
+Selon le tableau, le type d'accès implémenté par le Storage Class EBS est ReadWriteOnce, ce qui signifie que le volume peut être monté en lecture-écriture par un seul noeud.
+
+Cela convient parfaitement à nos besoins actuels étant donné que nous n'avons qu'un seul réplica du Pod de la base de donnée, ce réplica ne peut donc se trouver que sur un seul noeud de notre cluster.
+De plus, nous avons des opérations de lecture et d'écriture donc ce volume correspond exactement à nos besoins.
+
+### Vérifiez que le PVC est bien créé. Quel est le nom du PV ?
+
+```
+kubectl get pvc
+
+NAME    STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pg-db   Pending                                      gp2            35s
+```
+
+```
+kubectl get pvc
+
+pvc-288c7aa3-e629-4942-8993-d92e596a2e7e   3Gi        RWO            Delete           Bound    lilian-andres/pg-db                                                                                                 gp2                     21s
+```
+
+## Bonus
+
+### Bonus 1: Admin de la DB
+
+```
+kubectl port-forward service/pgadmin 8081:80
+```
+
+### Bonus 2: Les StatefulSets
+
+```
+kubectl port-forward service/pgadmin 8081:80
+```
+
+### Bonus 2: Les StatefulSets
+
+```
+kubectl get all
+NAME                                    READY   STATUS    RESTARTS   AGE
+pod/pg-statefulset-0                    1/1     Running   0          92s
+pod/pg-statefulset-1                    1/1     Running   0          35s
+pod/pg-statefulset-2                    1/1     Running   0          29s
+
+NAME                              READY   AGE
+statefulset.apps/pg-statefulset   3/3     93s
+```
+
+```
+kubectl get pvc
+NAME                                   STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pg-data-statefulset-pg-statefulset-0   Bound    pvc-72afd3bc-ce80-462f-8c5e-f8176cd19381   1Gi        RWO            gp2            2m59s
+pg-data-statefulset-pg-statefulset-1   Bound    pvc-0f57b930-0a87-4d15-a3d0-0060e713be6f   1Gi        RWO            gp2            2m2s
+pg-data-statefulset-pg-statefulset-2   Bound    pvc-51ee7b49-bd02-4ce6-9a3c-9a4943c5a191   1Gi        RWO            gp2            116s
+```
+
+```
+kubectl get pvc
+NAME                                   STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pg-data-statefulset-pg-statefulset-0   Bound    pvc-72afd3bc-ce80-462f-8c5e-f8176cd19381   1Gi        RWO            gp2            2m59s
+pg-data-statefulset-pg-statefulset-1   Bound    pvc-0f57b930-0a87-4d15-a3d0-0060e713be6f   1Gi        RWO            gp2            2m2s
+pg-data-statefulset-pg-statefulset-2   Bound    pvc-51ee7b49-bd02-4ce6-9a3c-9a4943c5a191   1Gi        RWO            gp2            116s
+```
+
+Il y a également 3 PV dont le nom s'apparente à : lilian-andres/pg-data-statefulset-pg-statefulset-0.
+
+### Bonus 3: Operator Postgres

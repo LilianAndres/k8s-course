@@ -1,25 +1,21 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: pg-deployment
+  name: pg-statefulset
   labels:
-    app: pg
+    app: pg-2
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: pg
+      app: pg-2
   template:
     metadata:
       labels:
-        app: pg
+        app: pg-2
     spec:
-      volumes:
-        - name: pg-data
-          persistentVolumeClaim:
-            claimName: pg-db
       containers:
-        - name: pg
+        - name: pg-2
           image: registry.takima.io/school/proxy/postgres:latest
           ports:
             - containerPort: 5432
@@ -52,7 +48,16 @@ spec:
                   name: pg-config
                   key: db_path
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: pg-data
+            - name: pg-data-statefulset
+              mountPath: /var/lib/postgresql/data
       imagePullSecrets:
         - name: takima-school-registry
+
+  volumeClaimTemplates:
+    - metadata:
+        name: pg-data-statefulset
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
