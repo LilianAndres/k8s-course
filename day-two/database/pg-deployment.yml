@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-deployment
+  labels:
+    app: pg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg
+  template:
+    metadata:
+      labels:
+        app: pg
+    spec:
+      containers:
+        - name: pg
+          image: registry.takima.io/school/proxy/postgres:latest
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: "256M"
+              cpu: "100m"
+            limits:
+              memory: "512M"
+              cpu: "1"
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-credentials
+                  key: postgres_password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-credentials
+                  key: postgres_user
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-config
+                  key: postgres_db
+      imagePullSecrets:
+        - name: takima-school-registry

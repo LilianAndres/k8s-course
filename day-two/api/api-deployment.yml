@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      securityContext:
+        runAsUser: 1001 # UID de l'API
+        runAsGroup: 1001 # GID de l'API
+        fsGroup: 1001
+      containers:
+        - name: api
+          image: registry.gitlab.com/takima-school/images/cdb/api:latest
+          securityContext:
+            allowPrivilegeEscalation: false # Éviter les escalades de privilèges
+            capabilities:
+              drop:
+                - ALL # Supprimer les capacités Linux inutiles
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256M"
+              cpu: "100m"
+            limits:
+              memory: "512M"
+              cpu: "2"
+          env:
+            - name: DB_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: db_endpoint
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-config
+                  key: postgres_db
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-credentials
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-credentials
+                  key: postgres_password
+      imagePullSecrets:
+        - name: takima-school-registry

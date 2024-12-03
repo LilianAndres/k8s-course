@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      securityContext:
+        runAsUser: 101 # UID de l'API
+        runAsGroup: 101 # GID de l'API
+        fsGroup: 101
+      containers:
+        - name: front
+          image: registry.gitlab.com/takima-school/images/cdb/www:latest
+          securityContext:
+            allowPrivilegeEscalation: false # Éviter les escalades de privilèges
+            capabilities:
+              drop:
+                - ALL # Supprimer les capacités Linux inutiles
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256M"
+              cpu: "100m"
+            limits:
+              memory: "512M"
+              cpu: "1"
+          env:
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: front-config
+                  key: api_url
+      imagePullSecrets:
+        - name: takima-school-registry
