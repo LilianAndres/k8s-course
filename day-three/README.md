@@ -21,7 +21,9 @@ Aucune question mentionnée dans le TP.
 Le code de cette partie peut être consulté à l'adresse: https://gitlab.com/lilian.andres/ch3-gitops.
 
 Bonus 1 :x:
+
 Bonus 2 :x:
+
 Bonus 3 :white_check_mark: (réalisé dans le bonus ArgoCD)
 
 ## ArgoCD
