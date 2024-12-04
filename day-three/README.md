@@ -22,7 +22,7 @@ Le code de cette partie peut être consulté à l'adresse: https://gitlab.com/li
 
 Bonus 1 :x:
 
-Bonus 2 :x:
+Bonus 2 :white_check_mark:
 
 Bonus 3 :white_check_mark: (réalisé dans le bonus ArgoCD)
 
